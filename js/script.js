@@ -1,190 +1,62 @@
-/* MENU BUTTON */
-const $openMenu = document.querySelector(".open-menu-button")
-const $mainNav = document.querySelector(".main-nav")
-const $closeMenu = document.querySelector(".close-menu-button")
-const $linksNav = document.querySelectorAll(".main-nav a")
+/*==================== toggle icon navbar ====================*/
+let menuIcon = document.querySelector('#menu-icon');
+let navbar = document.querySelector('.navbar');
 
-$openMenu.addEventListener("click", () => {
-   $mainNav.classList.add("-active")
-})
+menuIcon.onclick = () => {
+    menuIcon.classList.toggle('bx-x');
+    navbar.classList.toggle('active');
+};
 
-$closeMenu.addEventListener("click", () => {
-   $mainNav.classList.remove("-active")
-})
 
-$linksNav.forEach((linkNav) => {
-   linkNav.addEventListener("click", function() {
-      $mainNav.classList.remove("-active")
-   })
-})
+/*==================== scroll sections active link ====================*/
+let sections = document.querySelectorAll('section');
+let navLinks = document.querySelectorAll('header nav a');
 
-/* SKILLS BUTTONS */
-const $skillButtons = document.querySelectorAll(".skill-button")
+window.onscroll = () => {
+    sections.forEach(sec => {
+        let top = window.scrollY;
+        let offset = sec.offsetTop - 150;
+        let height = sec.offsetHeight;
+        let id = sec.getAttribute ('id');
 
-function selectSkill() {
-   let $skillActive = this
-   if ($skillActive.classList.contains("-active")) {
-      $skillActive.classList.remove("-active")
-   } else {
-      $skillActive.classList.add("-active")
-   }
-}
+        if(top >= offset && top < offset + height) {
+            navLinks.forEach(links => {
+                links.classList.remove('active');
+                document.querySelector('header nav a[href*=' + id + ']').classList.add('active');
+            });
+        };
+    });
 
-$skillButtons.forEach((skillItem) => {
-   skillItem.addEventListener("click", selectSkill)
-})
 
-/* QUALIFICATION TABS */
-const $tabQualification = document.querySelectorAll(".qualification-button")
-let $tabActive = document.querySelector(".qualification-button.-active")
+    /*==================== sticky navbar ====================*/
+    let header = document.querySelector('header');
 
-function selectQualification(item) {
-   item.preventDefault();
-   let $tabClicked = this;
-   $tabActive.classList.remove("-active");
-   $tabClicked.classList.add("-active");
-   $tabActive = $tabClicked;
+    header.classList.toggle('sticky', windows.scrollY > 100);
 
-   let $contentActive = document.querySelector(".qualification-content.-active");
-   $contentActive.classList.remove("-active");
-   let idContent = $tabClicked.getAttribute("href");
-   let $targetContent = document.querySelector(idContent);
-   $targetContent.classList.add("-active");
-}
+    /*==================== remove toggle icon and navbar when click navbar link (scroll) ====================*/
+    menuIcon.classList.remove('bx-x');
+    navbar.classList.remove('active');
+};
 
-$tabQualification.forEach((tabItem) => {
-   tabItem.addEventListener("click", selectQualification)
-})
 
-/* SERVICES MODAL */
-const $cardButtons = document.querySelectorAll(".card-button")
-const $serviceModals = document.querySelectorAll(".service-modal")
-const $closeModals = document.querySelectorAll(".modal-close")
+/*==================== scroll reveal ====================*/
+ScrollReveal({
+    //reset: true,
+    distance: '80px',
+    duration: 2000,
+    delay: 200
+});
 
-let modalService = (modalClick) => {
-   $serviceModals[modalClick].classList.add("-active")
-}
+ScrollReveal().reveal('.home-content, .heading', { origin: 'top'});
+ScrollReveal().reveal('.home-img, .services-container, .portfolio-box, .contact form', { origin: 'bottom'});
+ScrollReveal().reveal('.home-content h1, .about-img', { origin: 'left'});
+ScrollReveal().reveal('.home-content p, .about-content', { origin: 'right'});
 
-$cardButtons.forEach((cardButton, i) => {
-   cardButton.addEventListener("click", () => {
-      modalService(i)
-   })
-})
-
-$closeModals.forEach((closeModal) => {
-   closeModal.addEventListener("click", () => {
-      $serviceModals.forEach((serviceModal) => {
-         serviceModal.classList.remove("-active")
-      })
-   })
-})
-
-/* PORTFOLIO CAROUSEL */
-const $portfolioCarousel = document.querySelector(".glide.portfolio-carousel")
-
-new Glide($portfolioCarousel, {
-   type: "carousel",
-   gap: 0,
-   startAt: 1,
-   perView: 1,
-   autoplay: 3000,
-   hoverpause: true,
-   animationDuration: 1000
-}).mount()
-
-/* TESTIMONIAL CAROUSEL */
-const $testimonialCarousel = document.querySelector(".glide.testimonial-carousel")
-
-new Glide($testimonialCarousel, {
-   type: "carousel",
-   gap: 60,
-   startAt: 1,
-   perView: 2,
-   autoplay: 3000,
-   hoverpause: true,
-   animationDuration: 1000,
-   breakpoints: {
-      992: {
-         gap: 60,
-         perView: 1,
-         peek: {
-            before: 200,
-            after: 200
-         },
-      },
-      610: {
-         gap: 20,
-         perView: 1,
-      }
-   }
-}).mount()
-
-/* SCROOL EVENT */
-const scrollEvent = () => {
-   const $header = document.querySelector(".header")
-   const $btnToTop = document.querySelector(".btn-totop")
-
-   if (this.scrollY >= 50) {
-      $header.classList.add("-scroll")
-   } else {
-      $header.classList.remove("-scroll")
-   }
-
-   if (this.scrollY >= 550) {
-      $btnToTop.classList.add("-visible")
-   } else {
-      $btnToTop.classList.remove("-visible")
-   }
-}
-
-window.addEventListener("scroll", scrollEvent)
-
-/* SMOOTH SCROLL SECTION ACTIVE */
-const $sections = document.querySelectorAll(".section[id]")
-
-let sectionActive = () => {
-   const $scroll_Y = window.pageYOffset
-
-   $sections.forEach(current => {
-      const $sectionHeight = current.offsetHeight
-      const $sectionTop = current.offsetTop - 50
-      $sectionId = current.getAttribute("id")
-
-      if ($scroll_Y > $sectionTop && $scroll_Y <= $sectionTop + $sectionHeight) {
-         document.querySelector(".main-nav a[href*=" + $sectionId + "]").classList.add("-active")
-      } else {
-         document.querySelector(".main-nav a[href*=" + $sectionId + "]").classList.remove("-active")
-      }
-   })
-}
-
-window.addEventListener("scroll", sectionActive)
-
-/* DARK/LIGHT THEME */
-const $themeButton = document.querySelector(".theme-button")
-const $body = document.body
-const $themeActive = window.localStorage.getItem("theme")
-
-if ($themeActive === "dark") {
-   $themeButton.classList.add("-dark-mode")
-   $body.classList.add("dark-theme")
-} else {
-   $themeButton.classList.remove("-dark-mode")
-   $body.classList.remove("dark-theme")
-}
-
-const toggleTheme = () => {
-   let $darkMode = document.querySelector(".-dark-mode")
-
-   if (!$darkMode) {
-      $themeButton.classList.add("-dark-mode")
-      $body.classList.add("dark-theme")
-      localStorage.setItem("theme", "dark")
-   } else {
-      $themeButton.classList.remove("-dark-mode")
-      $body.classList.remove("dark-theme")
-      localStorage.setItem("theme", "light")
-   }
-}
-
-$themeButton.addEventListener("click", toggleTheme)
+/*==================== typed js ====================*/
+const typed = new Typed('.multiple-text', {
+    strings: ['IT Support', 'IT Infrastructure', 'DevOps Engineer'],
+    typeSpeed: 100,
+    backSpeed: 100,
+    backDelay: 1000,
+    loop: true
+});
